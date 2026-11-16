@@ -180,11 +180,11 @@ namespace locallru {
     // - initialize(capacity, ttl) sets *global* defaults for yet-to-be-created
     //   thread-local stores and returns a lightweight handle.
     
-    template<typename T>
+    template<typename K, typename V>
     class LocalCache {
         public:
-            using key_type = std::string;
-            using value_type = T;
+            using key_type = K;
+            using value_type = V;
             
             // Set global defaults for future thread-local stores of this T.
             // Returns a lightweight handle (stateless) for calling add/get.
@@ -243,12 +243,12 @@ namespace locallru {
     };      
     
     // Static Definitions
-    template <typename T>
-    std::atomic<std::size_t> LocalCache<T>::g_capacity{0};
+    template <typename K, typename V>
+    std::atomic<std::size_t> LocalCache<K, V>::g_capacity{0};
 
-    template <typename T>
-    std::atomic<std::uint64_t> LocalCache<T>::g_ttl_seconds{0};
+    template <typename K, typename V>
+    std::atomic<std::uint64_t> LocalCache<K, V>::g_ttl_seconds{0};
     
-    template <typename T>
-    thread_local std::unique_ptr<typename LocalCache<T>::Store> LocalCache<T>::ttl_store_{};
+    template <typename K, typename V>
+    thread_local std::unique_ptr<typename LocalCache<K, V>::Store> LocalCache<K, V>::ttl_store_{};
 }
